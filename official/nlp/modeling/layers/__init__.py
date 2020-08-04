@@ -23,6 +23,10 @@ from official.nlp.modeling.layers.masked_softmax import MaskedSoftmax
 from official.nlp.modeling.layers.multi_channel_attention import *
 from official.nlp.modeling.layers.on_device_embedding import OnDeviceEmbedding
 from official.nlp.modeling.layers.position_embedding import PositionEmbedding
+<<<<<<< HEAD
+=======
+from official.nlp.modeling.layers.position_embedding import RelativePositionEmbedding
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.nlp.modeling.layers.rezero_transformer import ReZeroTransformer
 from official.nlp.modeling.layers.self_attention_mask import SelfAttentionMask
 from official.nlp.modeling.layers.talking_heads_attention import TalkingHeadsAttention

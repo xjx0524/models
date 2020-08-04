@@ -20,6 +20,10 @@ import tensorflow as tf
 
 from official.core import input_reader
 from official.modeling.hyperparams import config_definitions as cfg
+<<<<<<< HEAD
+=======
+from official.nlp.data import data_loader
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.nlp.data import data_loader_factory
 
 
@@ -42,7 +46,11 @@ class QADataConfig(cfg.DataConfig):
 
 
 @data_loader_factory.register_data_loader_cls(QADataConfig)
+<<<<<<< HEAD
 class QuestionAnsweringDataLoader:
+=======
+class QuestionAnsweringDataLoader(data_loader.DataLoader):
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   """A class to load dataset for sentence prediction (classification) task."""
 
   def __init__(self, params):

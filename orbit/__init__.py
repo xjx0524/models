@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # Lint as: python3
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 # Copyright 2020 The Orbit Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

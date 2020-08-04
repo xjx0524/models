@@ -449,7 +449,11 @@ class RetinanetBoxLoss(object):
       num_positives: number of positive examples in the minibatch.
 
     Returns:
+<<<<<<< HEAD
       an integar tensor representing total box regression loss.
+=======
+      an integer tensor representing total box regression loss.
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     """
     # Sums all positives in a batch for normalization and avoids zero
     # num_positives_sum, which would lead to inf loss during training
@@ -457,7 +461,10 @@ class RetinanetBoxLoss(object):
 
     box_losses = []
     for level in box_outputs.keys():
+<<<<<<< HEAD
       # Onehot encoding for classification labels.
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       box_targets_l = labels[level]
       box_losses.append(
           self.box_loss(box_outputs[level], box_targets_l, num_positives_sum))

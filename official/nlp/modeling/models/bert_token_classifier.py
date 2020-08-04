@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+<<<<<<< HEAD
 """Trainer network for BERT-style models."""
 # pylint: disable=g-classes-have-attributes
 from __future__ import absolute_import
@@ -23,6 +24,13 @@ import tensorflow as tf
 
 from official.nlp.modeling import networks
 
+=======
+"""BERT token classifier."""
+# pylint: disable=g-classes-have-attributes
+
+import tensorflow as tf
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 @tf.keras.utils.register_keras_serializable(package='Text')
 class BertTokenClassifier(tf.keras.Model):
@@ -77,6 +85,7 @@ class BertTokenClassifier(tf.keras.Model):
     sequence_output = tf.keras.layers.Dropout(
         rate=dropout_rate)(sequence_output)
 
+<<<<<<< HEAD
     self.classifier = networks.TokenClassification(
         input_width=sequence_output.shape[-1],
         num_classes=num_classes,
@@ -87,6 +96,25 @@ class BertTokenClassifier(tf.keras.Model):
 
     super(BertTokenClassifier, self).__init__(
         inputs=inputs, outputs=predictions, **kwargs)
+=======
+    self.classifier = tf.keras.layers.Dense(
+        num_classes,
+        activation=None,
+        kernel_initializer=initializer,
+        name='predictions/transform/logits')
+    self.logits = self.classifier(sequence_output)
+    if output == 'logits':
+      output_tensors = self.logits
+    elif output == 'predictions':
+      output_tensors = tf.keras.layers.Activation(tf.nn.log_softmax)(
+          self.logits)
+    else:
+      raise ValueError(
+          ('Unknown `output` value "%s". `output` can be either "logits" or '
+           '"predictions"') % output)
+    super(BertTokenClassifier, self).__init__(
+        inputs=inputs, outputs=output_tensors, **kwargs)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
   @property
   def checkpoint_items(self):

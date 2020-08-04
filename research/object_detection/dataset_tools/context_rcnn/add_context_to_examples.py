@@ -53,7 +53,11 @@ import os
 import numpy as np
 import PIL.Image
 import six
+<<<<<<< HEAD
 import tensorflow.compat.v1 as tf
+=======
+import tensorflow as tf
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 try:
   import apache_beam as beam  # pylint:disable=g-import-not-at-top
@@ -926,6 +930,10 @@ def main(argv=None, save_main_session=True):
       args.context_features_score_threshold,
       args.keep_only_positives_gt,
       args.max_num_elements_in_context_features,
+<<<<<<< HEAD
+=======
+      args.num_shards,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       args.output_type,
       args.max_clip_length,
       args.context_feature_length)

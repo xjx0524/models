@@ -26,6 +26,10 @@ import tensorflow as tf
 import tensorflow_hub as hub
 
 from official.core import base_task
+<<<<<<< HEAD
+=======
+from official.core import task_factory
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.modeling.hyperparams import base_config
 from official.modeling.hyperparams import config_definitions as cfg
 from official.nlp.configs import encoders
@@ -62,7 +66,11 @@ class SentencePredictionConfig(cfg.TaskConfig):
   validation_data: cfg.DataConfig = cfg.DataConfig()
 
 
+<<<<<<< HEAD
 @base_task.register_task_cls(SentencePredictionConfig)
+=======
+@task_factory.register_task_cls(SentencePredictionConfig)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class SentencePredictionTask(base_task.Task):
   """Task object for sentence_prediction."""
 
@@ -244,6 +252,7 @@ def predict(task: SentencePredictionTask, params: cfg.DataConfig,
   """
   is_regression = task.task_config.model.num_classes == 1
 
+<<<<<<< HEAD
   @tf.function
   def predict_step(iterator):
     """Predicts on distributed devices."""
@@ -275,3 +284,27 @@ def predict(task: SentencePredictionTask, params: cfg.DataConfig,
   predictions = loop_fn(
       iter(dataset), num_steps=-1, state=[], reduce_fn=reduce_fn)
   return predictions
+=======
+  def predict_step(inputs):
+    """Replicated prediction calculation."""
+    x, _ = inputs
+    outputs = task.inference_step(x, model)
+    if is_regression:
+      return outputs
+    else:
+      return tf.argmax(outputs, axis=-1)
+
+  def aggregate_fn(state, outputs):
+    """Concatenates model's outputs."""
+    if state is None:
+      state = {'predictions': []}
+
+    for per_replica_batch_predictions in outputs:
+      state['predictions'].extend(per_replica_batch_predictions)
+    return state
+
+  dataset = orbit.utils.make_distributed_dataset(tf.distribute.get_strategy(),
+                                                 task.build_inputs, params)
+  outputs = utils.predict(predict_step, aggregate_fn, dataset)
+  return outputs['predictions']
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

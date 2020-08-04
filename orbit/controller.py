@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # Lint as: python3
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 # Copyright 2020 The Orbit Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +19,14 @@
 """A light weight utilities to train TF2 models."""
 
 import time
+<<<<<<< HEAD
 from typing import Callable, Optional, Text, Union
 from absl import logging
+=======
+from typing import Callable, Dict, Optional, Text, Union
+from absl import logging
+import numpy as np
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from orbit import runner
 from orbit import utils
 
@@ -177,7 +186,11 @@ class Controller:
     if checkpoint_at_completion:
       self.save_checkpoint()
 
+<<<<<<< HEAD
   def evaluate(self, steps: int = None):
+=======
+  def evaluate(self, steps: int = None) -> Optional[Dict[Text, np.number]]:
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     """Runs evaluation.
 
     This method calls the `evaluate` method on the Evaluator object for `steps`
@@ -186,10 +199,19 @@ class Controller:
     Args:
       steps: The number of steps to evaluate for.
 
+<<<<<<< HEAD
     Raises:
       ValueError: If no checkpoint found in `self.checkpoint_manager.directory`.
       ValueError: If `evaluator` is not provided.
 
+=======
+    Returns:
+      The evaluation results as a dictionary of numpy values.
+
+    Raises:
+      ValueError: If no checkpoint found in `self.checkpoint_manager.directory`.
+      ValueError: If `evaluator` is not provided.
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     """
     if self.evaluator is None:
       raise ValueError("`evaluator` must be provided to call `evaluate()` "
@@ -204,7 +226,11 @@ class Controller:
     else:
       logging.info("Evaluating at train step: %s", current_step)
 
+<<<<<<< HEAD
     with self.eval_summary_manager.summary_writer.as_default():
+=======
+    with self.eval_summary_manager.summary_writer().as_default():
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       eval_outputs = self.evaluator.evaluate(steps)
 
     if eval_outputs:
@@ -217,6 +243,11 @@ class Controller:
     self.eval_summary_manager.write_summaries(eval_outputs)
     self.eval_summary_manager.flush()
 
+<<<<<<< HEAD
+=======
+    return eval_outputs
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   def restore_checkpoint(self, checkpoint_path: Text = None):
     """Restore or initialize the model.
 
@@ -334,7 +365,11 @@ class Controller:
     current_step += num_steps
     num_steps = tf.convert_to_tensor(num_steps, dtype=tf.int32)
 
+<<<<<<< HEAD
     with self.summary_manager.summary_writer.as_default():
+=======
+    with self.summary_manager.summary_writer().as_default():
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       # Create a lambda that returns true when summaries should be written.
       should_record = False  # Allows static optimization in no-summary cases.
       if self.summary_interval:

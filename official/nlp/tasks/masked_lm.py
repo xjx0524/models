@@ -14,11 +14,18 @@
 # limitations under the License.
 # ==============================================================================
 """Masked language task."""
+<<<<<<< HEAD
 from absl import logging
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 import dataclasses
 import tensorflow as tf
 
 from official.core import base_task
+<<<<<<< HEAD
+=======
+from official.core import task_factory
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.modeling.hyperparams import config_definitions as cfg
 from official.nlp.configs import bert
 from official.nlp.data import data_loader_factory
@@ -27,7 +34,10 @@ from official.nlp.data import data_loader_factory
 @dataclasses.dataclass
 class MaskedLMConfig(cfg.TaskConfig):
   """The model config."""
+<<<<<<< HEAD
   init_checkpoint: str = ''
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   model: bert.BertPretrainerConfig = bert.BertPretrainerConfig(cls_heads=[
       bert.ClsHeadConfig(
           inner_dim=768, num_classes=2, dropout_rate=0.1, name='next_sentence')
@@ -36,7 +46,11 @@ class MaskedLMConfig(cfg.TaskConfig):
   validation_data: cfg.DataConfig = cfg.DataConfig()
 
 
+<<<<<<< HEAD
 @base_task.register_task_cls(MaskedLMConfig)
+=======
+@task_factory.register_task_cls(MaskedLMConfig)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class MaskedLMTask(base_task.Task):
   """Mock task object for testing."""
 
@@ -174,6 +188,7 @@ class MaskedLMTask(base_task.Task):
         aux_losses=model.losses)
     self.process_metrics(metrics, inputs, outputs)
     return {self.loss: loss}
+<<<<<<< HEAD
 
   def initialize(self, model: tf.keras.Model):
     ckpt_dir_or_file = self.task_config.init_checkpoint
@@ -188,3 +203,5 @@ class MaskedLMTask(base_task.Task):
     status.expect_partial().assert_existing_objects_matched()
     logging.info('Finished loading pretrained checkpoint from %s',
                  ckpt_dir_or_file)
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

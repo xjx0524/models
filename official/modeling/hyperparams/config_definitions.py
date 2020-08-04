@@ -21,7 +21,10 @@ import dataclasses
 
 from official.modeling.hyperparams import base_config
 from official.modeling.optimization.configs import optimization_config
+<<<<<<< HEAD
 from official.utils import registry
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 OptimizationConfig = optimization_config.OptimizationConfig
 
@@ -179,6 +182,10 @@ class TrainerConfig(base_config.Config):
     max_to_keep: max checkpoints to keep.
     continuous_eval_timeout: maximum number of seconds to wait between
       checkpoints, if set to None, continuous eval will wait indefinitely.
+<<<<<<< HEAD
+=======
+      This is only used continuous_train_and_eval and continuous_eval modes.
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     train_steps: number of train steps.
     validation_steps: number of eval steps. If `None`, the entire eval dataset
       is used.
@@ -205,6 +212,10 @@ class TrainerConfig(base_config.Config):
 
 @dataclasses.dataclass
 class TaskConfig(base_config.Config):
+<<<<<<< HEAD
+=======
+  init_checkpoint: str = ""
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   model: base_config.Config = None
   train_data: DataConfig = DataConfig()
   validation_data: DataConfig = DataConfig()
@@ -217,6 +228,7 @@ class ExperimentConfig(base_config.Config):
   trainer: TrainerConfig = TrainerConfig()
   runtime: RuntimeConfig = RuntimeConfig()
 
+<<<<<<< HEAD
 
 _REGISTERED_CONFIGS = {}
 
@@ -230,3 +242,5 @@ def get_exp_config_creater(exp_name: str):
   """Looks up ExperimentConfig factory methods."""
   exp_creater = registry.lookup(_REGISTERED_CONFIGS, exp_name)
   return exp_creater
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

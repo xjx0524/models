@@ -129,8 +129,15 @@ class CenterNetResnetFeatureExtractor(CenterNetFeatureExtractor):
     else:
       supported_types = ['classification']
       raise ValueError(
+<<<<<<< HEAD
           ('Sub model {} is not defined for ResNet.'.format(sub_model_type) +
            'Supported types are {}.'.format(supported_types)))
+=======
+          ('Sub model {} is not defined for ResNet.'.format(sub_model_type)
+           + 'Supported types are {}.'.format(supported_types)
+           + 'Use the script convert_keras_models.py to create your own '
+           + 'classification checkpoints.'))
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 def resnet_v2_101(channel_means, channel_stds, bgr_ordering):

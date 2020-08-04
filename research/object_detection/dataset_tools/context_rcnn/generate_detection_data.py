@@ -48,7 +48,12 @@ from __future__ import print_function
 import argparse
 import os
 import threading
+<<<<<<< HEAD
 import tensorflow.compat.v1 as tf
+=======
+import tensorflow as tf
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 try:
   import apache_beam as beam  # pylint:disable=g-import-not-at-top
 except ModuleNotFoundError:
@@ -85,6 +90,7 @@ class GenerateDetectionDataFn(beam.DoFn):
     # one instance across all threads in the worker. This is possible since
     # tf.Session.run() is thread safe.
     with self.session_lock:
+<<<<<<< HEAD
       if self._session is None:
         graph = tf.Graph()
         self._session = tf.Session(graph=graph)
@@ -101,6 +107,9 @@ class GenerateDetectionDataFn(beam.DoFn):
             signature.outputs['detection_scores'].name)
         self._num_detections_node = graph.get_tensor_by_name(
             signature.outputs['num_detections'].name)
+=======
+      self._detect_fn = tf.saved_model.load(self._model_dir)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
   def process(self, tfrecord_entry):
     return self._run_inference_and_generate_detections(tfrecord_entry)
@@ -112,9 +121,17 @@ class GenerateDetectionDataFn(beam.DoFn):
       # There are already ground truth boxes for this image, just keep them.
       return [input_example]
 
+<<<<<<< HEAD
     detection_boxes, detection_scores, num_detections = self._session.run(
         [self._boxes_node, self._scores_node, self._num_detections_node],
         feed_dict={self._input: [tfrecord_entry]})
+=======
+    detections = self._detect_fn.signatures['serving_default'](
+        (tf.expand_dims(tf.convert_to_tensor(tfrecord_entry), 0)))
+    detection_boxes = detections['detection_boxes']
+    num_detections = detections['num_detections']
+    detection_scores = detections['detection_scores']
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     example = tf.train.Example()
 

@@ -237,7 +237,11 @@ def convert_groundtruths_to_coco_dataset(groundtruths, label_map=None):
               (boxes[j, k, 3] - boxes[j, k, 1]) *
               (boxes[j, k, 2] - boxes[j, k, 0]))
         if 'masks' in groundtruths:
+<<<<<<< HEAD
           mask = Image.open(six.StringIO(groundtruths['masks'][i][j, k]))
+=======
+          mask = Image.open(six.BytesIO(groundtruths['masks'][i][j, k]))
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
           width, height = mask.size
           np_mask = (
               np.array(mask.getdata()).reshape(height, width).astype(np.uint8))

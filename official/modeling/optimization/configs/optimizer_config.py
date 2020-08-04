@@ -106,6 +106,10 @@ class AdamWeightDecayConfig(base_config.Config):
   weight_decay_rate: float = 0.0
   include_in_weight_decay: Optional[List[str]] = None
   exclude_from_weight_decay: Optional[List[str]] = None
+<<<<<<< HEAD
+=======
+  gradient_clip_norm: float = 1.0
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 @dataclasses.dataclass

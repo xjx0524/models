@@ -216,13 +216,21 @@ def pad_to_multiple(tensor, multiple):
     height_pad = tf.zeros([
         batch_size, padded_tensor_height - tensor_height, tensor_width,
         tensor_depth
+<<<<<<< HEAD
     ])
+=======
+    ], dtype=tensor.dtype)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     tensor = tf.concat([tensor, height_pad], 1)
   if padded_tensor_width != tensor_width:
     width_pad = tf.zeros([
         batch_size, padded_tensor_height, padded_tensor_width - tensor_width,
         tensor_depth
+<<<<<<< HEAD
     ])
+=======
+    ], dtype=tensor.dtype)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     tensor = tf.concat([tensor, width_pad], 2)
 
   return tensor

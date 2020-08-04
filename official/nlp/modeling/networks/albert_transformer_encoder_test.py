@@ -48,7 +48,10 @@ class AlbertTransformerEncoderTest(keras_parameterized.TestCase):
     kwargs = dict(
         vocab_size=100,
         hidden_size=hidden_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         num_attention_heads=2,
         num_layers=3)
     if expected_dtype == tf.float16:
@@ -92,7 +95,10 @@ class AlbertTransformerEncoderTest(keras_parameterized.TestCase):
         vocab_size=vocab_size,
         embedding_width=8,
         hidden_size=hidden_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         num_attention_heads=2,
         num_layers=3,
         type_vocab_size=num_types)
@@ -123,7 +129,10 @@ class AlbertTransformerEncoderTest(keras_parameterized.TestCase):
         vocab_size=vocab_size,
         embedding_width=8,
         hidden_size=hidden_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         max_sequence_length=max_sequence_length,
         num_attention_heads=2,
         num_layers=3,
@@ -141,7 +150,10 @@ class AlbertTransformerEncoderTest(keras_parameterized.TestCase):
         hidden_size=32,
         num_layers=3,
         num_attention_heads=2,
+<<<<<<< HEAD
         sequence_length=21,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         max_sequence_length=21,
         type_vocab_size=12,
         intermediate_size=1223,

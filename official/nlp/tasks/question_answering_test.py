@@ -81,6 +81,11 @@ class QuestionAnsweringTaskTest(tf.test.TestCase, parameterized.TestCase):
     val_dataset = task.build_inputs(config.validation_data)
     val_iterator = iter(val_dataset)
     logs = task.validation_step(next(val_iterator), model, metrics=metrics)
+<<<<<<< HEAD
+=======
+    # Mock that `logs` is from one replica.
+    logs = {x: (logs[x],) for x in logs}
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     logs = task.aggregate_logs(step_outputs=logs)
     metrics = task.reduce_aggregated_logs(logs)
     self.assertIn("final_f1", metrics)
@@ -160,6 +165,30 @@ class QuestionAnsweringTaskTest(tf.test.TestCase, parameterized.TestCase):
         validation_data=self._get_validation_data_config())
     self._run_task(config)
 
+<<<<<<< HEAD
+=======
+  @parameterized.named_parameters(("squad1", False), ("squad2", True))
+  def test_predict(self, version_2_with_negative):
+    validation_data = self._get_validation_data_config(
+        version_2_with_negative=version_2_with_negative)
+
+    config = question_answering.QuestionAnsweringConfig(
+        model=question_answering.ModelConfig(encoder=self._encoder_config),
+        train_data=self._train_data_config,
+        validation_data=validation_data)
+    task = question_answering.QuestionAnsweringTask(config)
+    model = task.build_model()
+
+    all_predictions, all_nbest, scores_diff = question_answering.predict(
+        task, validation_data, model)
+    self.assertLen(all_predictions, 1)
+    self.assertLen(all_nbest, 1)
+    if version_2_with_negative:
+      self.assertLen(scores_diff, 1)
+    else:
+      self.assertEmpty(scores_diff)
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 if __name__ == "__main__":
   tf.test.main()

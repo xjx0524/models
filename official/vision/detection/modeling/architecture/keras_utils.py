@@ -23,6 +23,10 @@ from tensorflow.python.keras import backend
 
 try:
   from tensorflow.python.keras.engine import keras_tensor  # pylint: disable=g-import-not-at-top,unused-import
+<<<<<<< HEAD
+=======
+  keras_tensor.disable_keras_tensors()
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 except ImportError:
   keras_tensor = None
 

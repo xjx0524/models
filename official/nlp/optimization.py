@@ -130,13 +130,24 @@ class AdamWeightDecay(tf.keras.optimizers.Adam):
                weight_decay_rate=0.0,
                include_in_weight_decay=None,
                exclude_from_weight_decay=None,
+<<<<<<< HEAD
+=======
+               gradient_clip_norm=1.0,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
                name='AdamWeightDecay',
                **kwargs):
     super(AdamWeightDecay, self).__init__(learning_rate, beta_1, beta_2,
                                           epsilon, amsgrad, name, **kwargs)
     self.weight_decay_rate = weight_decay_rate
+<<<<<<< HEAD
     self._include_in_weight_decay = include_in_weight_decay
     self._exclude_from_weight_decay = exclude_from_weight_decay
+=======
+    self.gradient_clip_norm = gradient_clip_norm
+    self._include_in_weight_decay = include_in_weight_decay
+    self._exclude_from_weight_decay = exclude_from_weight_decay
+    logging.info('gradient_clip_norm=%f', gradient_clip_norm)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
   @classmethod
   def from_config(cls, config):
@@ -165,7 +176,11 @@ class AdamWeightDecay(tf.keras.optimizers.Adam):
                       name=None,
                       experimental_aggregate_gradients=True):
     grads, tvars = list(zip(*grads_and_vars))
+<<<<<<< HEAD
     if experimental_aggregate_gradients:
+=======
+    if experimental_aggregate_gradients and self.gradient_clip_norm > 0.0:
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       # when experimental_aggregate_gradients = False, apply_gradients() no
       # longer implicitly allreduce gradients, users manually allreduce gradient
       # and passed the allreduced grads_and_vars. For now, the

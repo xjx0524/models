@@ -11,6 +11,10 @@ import "object_detection/protos/losses.proto";
 import "object_detection/protos/matcher.proto";
 import "object_detection/protos/post_processing.proto";
 import "object_detection/protos/region_similarity_calculator.proto";
+<<<<<<< HEAD
+=======
+import "object_detection/protos/fpn.proto";
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 // Configuration for Single Shot Detection (SSD) models.
 // Next id: 27
@@ -203,6 +207,7 @@ message SsdFeatureExtractor {
 
 }
 
+<<<<<<< HEAD
 // Configuration for Feature Pyramid Networks.
 message FeaturePyramidNetworks {
   // We recommend to use multi_resolution_feature_map_generator with FPN, and
@@ -250,3 +255,5 @@ message BidirectionalFeaturePyramidNetworks {
   optional string combine_method = 5 [default = 'fast_attention'];
 }
 
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

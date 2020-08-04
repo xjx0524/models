@@ -26,6 +26,15 @@ from absl import logging
 import tensorflow as tf
 
 
+<<<<<<< HEAD
+=======
+from tensorflow.python.eager import monitoring
+
+global_batch_size_gauge = monitoring.IntGauge(
+    '/tensorflow/training/global_batch_size', 'TF training global batch size')
+
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class BatchTimestamp(object):
   """A structure to store batch time stamp."""
 
@@ -60,6 +69,11 @@ class TimeHistory(tf.keras.callbacks.Callback):
     self.steps_in_epoch = 0
     self.start_time = None
 
+<<<<<<< HEAD
+=======
+    global_batch_size_gauge.get_cell().set(batch_size)
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     if logdir:
       self.summary_writer = tf.summary.create_file_writer(logdir)
     else:

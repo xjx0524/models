@@ -34,7 +34,10 @@ class MaskedLMTest(keras_parameterized.TestCase):
 
   def create_layer(self,
                    vocab_size,
+<<<<<<< HEAD
                    sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
                    hidden_size,
                    output='predictions',
                    xformer_stack=None):
@@ -44,7 +47,10 @@ class MaskedLMTest(keras_parameterized.TestCase):
       xformer_stack = transformer_encoder.TransformerEncoder(
           vocab_size=vocab_size,
           num_layers=1,
+<<<<<<< HEAD
           sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
           hidden_size=hidden_size,
           num_attention_heads=4,
       )
@@ -62,7 +68,10 @@ class MaskedLMTest(keras_parameterized.TestCase):
     num_predictions = 21
     test_layer = self.create_layer(
         vocab_size=vocab_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         hidden_size=hidden_size)
 
     # Make sure that the output tensor of the masked LM is the right shape.
@@ -81,19 +90,28 @@ class MaskedLMTest(keras_parameterized.TestCase):
     xformer_stack = transformer_encoder.TransformerEncoder(
         vocab_size=vocab_size,
         num_layers=1,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         hidden_size=hidden_size,
         num_attention_heads=4,
     )
     test_layer = self.create_layer(
         vocab_size=vocab_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         hidden_size=hidden_size,
         xformer_stack=xformer_stack,
         output='predictions')
     logit_layer = self.create_layer(
         vocab_size=vocab_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         hidden_size=hidden_size,
         xformer_stack=xformer_stack,
         output='logits')
@@ -134,7 +152,10 @@ class MaskedLMTest(keras_parameterized.TestCase):
     num_predictions = 21
     test_layer = self.create_layer(
         vocab_size=vocab_size,
+<<<<<<< HEAD
         sequence_length=sequence_length,
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         hidden_size=hidden_size)
 
     # Create a model from the masked LM layer.
@@ -155,7 +176,11 @@ class MaskedLMTest(keras_parameterized.TestCase):
   def test_unknown_output_type_fails(self):
     with self.assertRaisesRegex(ValueError, 'Unknown `output` value "bad".*'):
       _ = self.create_layer(
+<<<<<<< HEAD
           vocab_size=8, sequence_length=8, hidden_size=8, output='bad')
+=======
+          vocab_size=8, hidden_size=8, output='bad')
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 if __name__ == '__main__':

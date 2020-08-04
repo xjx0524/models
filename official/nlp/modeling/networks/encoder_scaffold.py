@@ -129,6 +129,7 @@ class EncoderScaffold(tf.keras.Model):
       embeddings, attention_mask = self._embedding_network(inputs)
     else:
       self._embedding_network = None
+<<<<<<< HEAD
       word_ids = tf.keras.layers.Input(
           shape=(embedding_cfg['seq_length'],),
           dtype=tf.int32,
@@ -139,6 +140,19 @@ class EncoderScaffold(tf.keras.Model):
           name='input_mask')
       type_ids = tf.keras.layers.Input(
           shape=(embedding_cfg['seq_length'],),
+=======
+      seq_length = embedding_cfg.get('seq_length', None)
+      word_ids = tf.keras.layers.Input(
+          shape=(seq_length,),
+          dtype=tf.int32,
+          name='input_word_ids')
+      mask = tf.keras.layers.Input(
+          shape=(seq_length,),
+          dtype=tf.int32,
+          name='input_mask')
+      type_ids = tf.keras.layers.Input(
+          shape=(seq_length,),
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
           dtype=tf.int32,
           name='input_type_ids')
       inputs = [word_ids, mask, type_ids]

@@ -49,6 +49,16 @@ class Transformer(tf.keras.layers.Layer):
     activity_regularizer: Regularizer for dense layer activity.
     kernel_constraint: Constraint for dense layer kernels.
     bias_constraint: Constraint for dense layer kernels.
+<<<<<<< HEAD
+=======
+    use_bias: Whether to enable use_bias in attention layer. If set False,
+      use_bias in attention layer is disabled.
+    norm_first: Whether to normalize inputs to attention and intermediate dense
+      layers. If set False, output of attention and intermediate dense layers is
+      normalized.
+    norm_epsilon: Epsilon value to initialize normalization layers.
+    intermediate_dropout: Dropout probability for intermediate_dropout_layer.
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   """
 
   def __init__(self,
@@ -65,6 +75,13 @@ class Transformer(tf.keras.layers.Layer):
                activity_regularizer=None,
                kernel_constraint=None,
                bias_constraint=None,
+<<<<<<< HEAD
+=======
+               use_bias=True,
+               norm_first=False,
+               norm_epsilon=1e-12,
+               intermediate_dropout=0.0,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
                **kwargs):
     super(Transformer, self).__init__(**kwargs)
 
@@ -81,6 +98,13 @@ class Transformer(tf.keras.layers.Layer):
     self._activity_regularizer = tf.keras.regularizers.get(activity_regularizer)
     self._kernel_constraint = tf.keras.constraints.get(kernel_constraint)
     self._bias_constraint = tf.keras.constraints.get(bias_constraint)
+<<<<<<< HEAD
+=======
+    self._use_bias = use_bias
+    self._norm_first = norm_first
+    self._norm_epsilon = norm_epsilon
+    self._intermediate_dropout = intermediate_dropout
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
   def build(self, input_shape):
     input_tensor = input_shape[0] if len(input_shape) == 2 else input_shape
@@ -117,6 +141,7 @@ class Transformer(tf.keras.layers.Layer):
         num_heads=self._num_heads,
         key_size=self._attention_head_size,
         dropout=self._attention_dropout_rate,
+<<<<<<< HEAD
         name="self_attention",
         **common_kwargs)
     # pylint: disable=protected-access
@@ -125,6 +150,11 @@ class Transformer(tf.keras.layers.Layer):
         query=input_tensor_shape, value=input_tensor_shape)
     self._attention_output_dense = self._attention_layer._output_dense
     # pylint: enable=protected-access
+=======
+        use_bias=self._use_bias,
+        name="self_attention",
+        **common_kwargs)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     self._attention_dropout = tf.keras.layers.Dropout(rate=self._dropout_rate)
     # Use float32 in layernorm for numeric stability.
     # It is probably safe in mixed_float16, but we haven't validated this yet.
@@ -132,7 +162,11 @@ class Transformer(tf.keras.layers.Layer):
         tf.keras.layers.LayerNormalization(
             name="self_attention_layer_norm",
             axis=-1,
+<<<<<<< HEAD
             epsilon=1e-12,
+=======
+            epsilon=self._norm_epsilon,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
             dtype=tf.float32))
     self._intermediate_dense = tf.keras.layers.experimental.EinsumDense(
         "abc,cd->abd",
@@ -148,6 +182,11 @@ class Transformer(tf.keras.layers.Layer):
       policy = tf.float32
     self._intermediate_activation_layer = tf.keras.layers.Activation(
         self._intermediate_activation, dtype=policy)
+<<<<<<< HEAD
+=======
+    self._intermediate_dropout_layer = tf.keras.layers.Dropout(
+        rate=self._intermediate_dropout)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     self._output_dense = tf.keras.layers.experimental.EinsumDense(
         "abc,cd->abd",
         output_shape=(None, hidden_size),
@@ -157,7 +196,14 @@ class Transformer(tf.keras.layers.Layer):
     self._output_dropout = tf.keras.layers.Dropout(rate=self._dropout_rate)
     # Use float32 in layernorm for numeric stability.
     self._output_layer_norm = tf.keras.layers.LayerNormalization(
+<<<<<<< HEAD
         name="output_layer_norm", axis=-1, epsilon=1e-12, dtype=tf.float32)
+=======
+        name="output_layer_norm",
+        axis=-1,
+        epsilon=self._norm_epsilon,
+        dtype=tf.float32)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     super(Transformer, self).build(input_shape)
 
@@ -188,7 +234,19 @@ class Transformer(tf.keras.layers.Layer):
         "kernel_constraint":
             tf.keras.constraints.serialize(self._kernel_constraint),
         "bias_constraint":
+<<<<<<< HEAD
             tf.keras.constraints.serialize(self._bias_constraint)
+=======
+            tf.keras.constraints.serialize(self._bias_constraint),
+        "use_bias":
+            self._use_bias,
+        "norm_first":
+            self._norm_first,
+        "norm_epsilon":
+            self._norm_epsilon,
+        "intermediate_dropout":
+            self._intermediate_dropout
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     }
     base_config = super(Transformer, self).get_config()
     return dict(list(base_config.items()) + list(config.items()))
@@ -203,23 +261,51 @@ class Transformer(tf.keras.layers.Layer):
       target_tensor = input_tensor[:, 0:self._output_range, :]
       attention_mask = attention_mask[:, 0:self._output_range, :]
     else:
+<<<<<<< HEAD
+=======
+      if self._norm_first:
+        source_tensor = input_tensor
+        input_tensor = self._attention_layer_norm(input_tensor)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       target_tensor = input_tensor
 
     attention_output = self._attention_layer(
         query=target_tensor, value=input_tensor, attention_mask=attention_mask)
     attention_output = self._attention_dropout(attention_output)
+<<<<<<< HEAD
     attention_output = self._attention_layer_norm(target_tensor +
                                                   attention_output)
     intermediate_output = self._intermediate_dense(attention_output)
     intermediate_output = self._intermediate_activation_layer(
         intermediate_output)
+=======
+    if self._norm_first:
+      attention_output = source_tensor + attention_output
+    else:
+      attention_output = self._attention_layer_norm(target_tensor +
+                                                    attention_output)
+    if self._norm_first:
+      source_attention_output = attention_output
+      attention_output = self._output_layer_norm(attention_output)
+    intermediate_output = self._intermediate_dense(attention_output)
+    intermediate_output = self._intermediate_activation_layer(
+        intermediate_output)
+    intermediate_output = self._intermediate_dropout_layer(intermediate_output)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     layer_output = self._output_dense(intermediate_output)
     layer_output = self._output_dropout(layer_output)
     # During mixed precision training, attention_output is from layer norm and
     # is always fp32 for now. Cast layer_output to fp32 for the subsequent
     # add.
     layer_output = tf.cast(layer_output, tf.float32)
+<<<<<<< HEAD
     layer_output = self._output_layer_norm(layer_output + attention_output)
+=======
+    if self._norm_first:
+      layer_output = source_attention_output + layer_output
+    else:
+      layer_output = self._output_layer_norm(layer_output + attention_output)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     return layer_output
 
@@ -257,6 +343,16 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
     activity_regularizer: Regularizer for dense layer activity.
     kernel_constraint: Constraint for dense layer kernels.
     bias_constraint: Constraint for dense layer kernels.
+<<<<<<< HEAD
+=======
+    use_bias: Whether to enable use_bias in attention layer. If set False,
+      use_bias in attention layer is disabled.
+    norm_first: Whether to normalize inputs to attention and intermediate dense
+      layers. If set False, output of attention and intermediate dense layers is
+      normalized.
+    norm_epsilon: Epsilon value to initialize normalization layers.
+    intermediate_dropout: Dropout probability for intermediate_dropout_layer.
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   """
 
   def __init__(self,
@@ -273,6 +369,13 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
                activity_regularizer=None,
                kernel_constraint=None,
                bias_constraint=None,
+<<<<<<< HEAD
+=======
+               use_bias=True,
+               norm_first=False,
+               norm_epsilon=1e-12,
+               intermediate_dropout=0.0,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
                **kwargs):
     super(TransformerDecoderLayer, self).__init__(**kwargs)
     self.num_attention_heads = num_attention_heads
@@ -289,6 +392,13 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
     self._activity_regularizer = tf.keras.regularizers.get(activity_regularizer)
     self._kernel_constraint = tf.keras.constraints.get(kernel_constraint)
     self._bias_constraint = tf.keras.constraints.get(bias_constraint)
+<<<<<<< HEAD
+=======
+    self._use_bias = use_bias
+    self._norm_first = norm_first
+    self._norm_epsilon = norm_epsilon
+    self._intermediate_dropout = intermediate_dropout
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     if self.multi_channel_cross_attention:
       self._cross_attention_cls = multi_channel_attention.MultiChannelAttention
     else:
@@ -318,6 +428,10 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
         num_heads=self.num_attention_heads,
         key_size=self.attention_head_size,
         dropout=self.attention_dropout_rate,
+<<<<<<< HEAD
+=======
+        use_bias=self._use_bias,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         name="self_attention",
         **common_kwargs)
     self.self_attention_output_dense = tf.keras.layers.experimental.EinsumDense(
@@ -330,13 +444,23 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
         rate=self.dropout_rate)
     self.self_attention_layer_norm = (
         tf.keras.layers.LayerNormalization(
+<<<<<<< HEAD
             name="self_attention_layer_norm", axis=-1, epsilon=1e-12))
+=======
+            name="self_attention_layer_norm",
+            axis=-1,
+            epsilon=self._norm_epsilon))
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     # Encoder-decoder attention.
     self.encdec_attention = self._cross_attention_cls(
         num_heads=self.num_attention_heads,
         key_size=self.attention_head_size,
         dropout=self.attention_dropout_rate,
         output_shape=hidden_size,
+<<<<<<< HEAD
+=======
+        use_bias=self._use_bias,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
         name="attention/encdec",
         **common_kwargs)
 
@@ -344,7 +468,13 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
         rate=self.dropout_rate)
     self.encdec_attention_layer_norm = (
         tf.keras.layers.LayerNormalization(
+<<<<<<< HEAD
             name="attention/encdec_output_layer_norm", axis=-1, epsilon=1e-12))
+=======
+            name="attention/encdec_output_layer_norm",
+            axis=-1,
+            epsilon=self._norm_epsilon))
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     # Feed-forward projection.
     self.intermediate_dense = tf.keras.layers.experimental.EinsumDense(
@@ -355,6 +485,11 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
         **common_kwargs)
     self.intermediate_activation_layer = tf.keras.layers.Activation(
         self.intermediate_activation)
+<<<<<<< HEAD
+=======
+    self._intermediate_dropout_layer = tf.keras.layers.Dropout(
+        rate=self._intermediate_dropout)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     self.output_dense = tf.keras.layers.experimental.EinsumDense(
         "abc,cd->abd",
         output_shape=(None, hidden_size),
@@ -363,9 +498,55 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
         **common_kwargs)
     self.output_dropout = tf.keras.layers.Dropout(rate=self.dropout_rate)
     self.output_layer_norm = tf.keras.layers.LayerNormalization(
+<<<<<<< HEAD
         name="output_layer_norm", axis=-1, epsilon=1e-12)
     super(TransformerDecoderLayer, self).build(input_shape)
 
+=======
+        name="output_layer_norm", axis=-1, epsilon=self._norm_epsilon)
+    super(TransformerDecoderLayer, self).build(input_shape)
+
+  def get_config(self):
+    config = {
+        "num_attention_heads":
+            self.num_attention_heads,
+        "intermediate_size":
+            self.intermediate_size,
+        "intermediate_activation":
+            self.intermediate_activation,
+        "dropout_rate":
+            self.dropout_rate,
+        "attention_dropout_rate":
+            self.attention_dropout_rate,
+        "multi_channel_cross_attention":
+            self.multi_channel_cross_attention,
+        "kernel_initializer":
+            tf.keras.initializers.serialize(self._kernel_initializer),
+        "bias_initializer":
+            tf.keras.initializers.serialize(self._bias_initializer),
+        "kernel_regularizer":
+            tf.keras.regularizers.serialize(self._kernel_regularizer),
+        "bias_regularizer":
+            tf.keras.regularizers.serialize(self._bias_regularizer),
+        "activity_regularizer":
+            tf.keras.regularizers.serialize(self._activity_regularizer),
+        "kernel_constraint":
+            tf.keras.constraints.serialize(self._kernel_constraint),
+        "bias_constraint":
+            tf.keras.constraints.serialize(self._bias_constraint),
+        "use_bias":
+            self._use_bias,
+        "norm_first":
+            self._norm_first,
+        "norm_epsilon":
+            self._norm_epsilon,
+        "intermediate_dropout":
+            self._intermediate_dropout
+    }
+    base_config = super(TransformerDecoderLayer, self).get_config()
+    return dict(list(base_config.items()) + list(config.items()))
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   def common_layers_with_encoder(self):
     """Gets layer objects that can make a Transformer encoder block."""
     return [
@@ -384,6 +565,12 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
           "TransformerDecoderLayer must have 4 inputs, but it got: %d" %
           len(inputs))
     input_tensor, memory, attention_mask, self_attention_mask = inputs[:4]
+<<<<<<< HEAD
+=======
+    source_tensor = input_tensor
+    if self._norm_first:
+      input_tensor = self.self_attention_layer_norm(input_tensor)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     self_attention_output, cache = self.self_attention(
         query=input_tensor,
         value=input_tensor,
@@ -391,8 +578,20 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
         cache=cache,
         decode_loop_step=decode_loop_step)
     self_attention_output = self.self_attention_dropout(self_attention_output)
+<<<<<<< HEAD
     self_attention_output = self.self_attention_layer_norm(
         input_tensor + self_attention_output)
+=======
+    if self._norm_first:
+      self_attention_output = source_tensor + self_attention_output
+    else:
+      self_attention_output = self.self_attention_layer_norm(
+          input_tensor + self_attention_output)
+    if self._norm_first:
+      source_self_attention_output = self_attention_output
+      self_attention_output = self.encdec_attention_layer_norm(
+          self_attention_output)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     cross_attn_inputs = dict(
         query=self_attention_output,
         value=memory,
@@ -402,13 +601,34 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
       cross_attn_inputs["context_attention_weights"] = inputs[-1]
     attention_output = self.encdec_attention(**cross_attn_inputs)
     attention_output = self.encdec_attention_dropout(attention_output)
+<<<<<<< HEAD
     attention_output = self.encdec_attention_layer_norm(self_attention_output +
                                                         attention_output)
+=======
+    if self._norm_first:
+      attention_output = source_self_attention_output + attention_output
+    else:
+      attention_output = self.encdec_attention_layer_norm(
+          self_attention_output + attention_output)
+    if self._norm_first:
+      source_attention_output = attention_output
+      attention_output = self.output_layer_norm(attention_output)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     intermediate_output = self.intermediate_dense(attention_output)
     intermediate_output = self.intermediate_activation_layer(
         intermediate_output)
+<<<<<<< HEAD
     layer_output = self.output_dense(intermediate_output)
     layer_output = self.output_dropout(layer_output)
     layer_output = self.output_layer_norm(layer_output + attention_output)
+=======
+    intermediate_output = self._intermediate_dropout_layer(intermediate_output)
+    layer_output = self.output_dense(intermediate_output)
+    layer_output = self.output_dropout(layer_output)
+    if self._norm_first:
+      layer_output = source_attention_output + layer_output
+    else:
+      layer_output = self.output_layer_norm(layer_output + attention_output)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     return layer_output, cache

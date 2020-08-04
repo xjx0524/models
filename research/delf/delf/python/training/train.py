@@ -47,7 +47,11 @@ flags.DEFINE_enum(
     'dataset_version', 'gld_v1', ['gld_v1', 'gld_v2', 'gld_v2_clean'],
     'Google Landmarks dataset version, used to determine the'
     'number of classes.')
+<<<<<<< HEAD
 #flags.DEFINE_integer('seed', 0, 'Seed to training dataset.')
+=======
+flags.DEFINE_integer('seed', 0, 'Seed to training dataset.')
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 flags.DEFINE_float('initial_lr', 0.01, 'Initial learning rate.')
 flags.DEFINE_integer('batch_size', 32, 'Global batch size.')
 flags.DEFINE_integer('max_iters', 500000, 'Maximum iterations.')

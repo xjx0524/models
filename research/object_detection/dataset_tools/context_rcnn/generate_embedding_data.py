@@ -55,7 +55,11 @@ import threading
 
 import numpy as np
 import six
+<<<<<<< HEAD
 import tensorflow.compat.v1 as tf
+=======
+import tensorflow as tf
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 try:
   import apache_beam as beam  # pylint:disable=g-import-not-at-top
@@ -63,6 +67,18 @@ except ModuleNotFoundError:
   pass
 
 
+<<<<<<< HEAD
+=======
+def add_keys(serialized_example):
+  key = hash(serialized_example)
+  return key, serialized_example
+
+
+def drop_keys(key_value_tuple):
+  return key_value_tuple[1]
+
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class GenerateEmbeddingDataFn(beam.DoFn):
   """Generates embedding data for camera trap images.
 
@@ -95,6 +111,7 @@ class GenerateEmbeddingDataFn(beam.DoFn):
     # one instance across all threads in the worker. This is possible since
     # tf.Session.run() is thread safe.
     with self.session_lock:
+<<<<<<< HEAD
       if self._session is None:
         graph = tf.Graph()
         self._session = tf.Session(graph=graph)
@@ -122,6 +139,16 @@ class GenerateEmbeddingDataFn(beam.DoFn):
 
   def _run_inference_and_generate_embedding(self, tfrecord_entry):
     input_example = tf.train.Example.FromString(tfrecord_entry)
+=======
+      self._detect_fn = tf.saved_model.load(self._model_dir)
+
+  def process(self, tfexample_key_value):
+    return self._run_inference_and_generate_embedding(tfexample_key_value)
+
+  def _run_inference_and_generate_embedding(self, tfexample_key_value):
+    key, tfexample = tfexample_key_value
+    input_example = tf.train.Example.FromString(tfexample)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     # Convert date_captured datetime string to unix time integer and store
 
     def get_date_captured(example):
@@ -181,6 +208,7 @@ class GenerateEmbeddingDataFn(beam.DoFn):
         (date_captured - datetime.datetime.fromtimestamp(0)).total_seconds())
 
     example = tf.train.Example()
+<<<<<<< HEAD
     example.features.feature['image/unix_time'].float_list.value.extend(
         [unix_time])
 
@@ -191,6 +219,18 @@ class GenerateEmbeddingDataFn(beam.DoFn):
              self._scores_node
          ],
          feed_dict={self._input: [tfrecord_entry]})
+=======
+    example.CopyFrom(input_example)
+    example.features.feature['image/unix_time'].float_list.value.extend(
+        [unix_time])
+
+    detections = self._detect_fn.signatures['serving_default'](
+        (tf.expand_dims(tf.convert_to_tensor(tfexample), 0)))
+    detection_features = detections['detection_features']
+    detection_boxes = detections['detection_boxes']
+    num_detections = detections['num_detections']
+    detection_scores = detections['detection_scores']
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     num_detections = int(num_detections)
     embed_all = []
@@ -251,6 +291,7 @@ class GenerateEmbeddingDataFn(beam.DoFn):
     example.features.feature['image/embedding_count'].int64_list.value.append(
         embedding_count)
 
+<<<<<<< HEAD
     # Add other essential example attributes
     example.features.feature['image/encoded'].bytes_list.value.extend(
         input_example.features.feature['image/encoded'].bytes_list.value)
@@ -305,6 +346,10 @@ class GenerateEmbeddingDataFn(beam.DoFn):
 
     self._num_examples_processed.inc(1)
     return [example]
+=======
+    self._num_examples_processed.inc(1)
+    return [(key, example)]
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 def construct_pipeline(pipeline, input_tfrecord, output_tfrecord, model_dir,
@@ -324,16 +369,29 @@ def construct_pipeline(pipeline, input_tfrecord, output_tfrecord, model_dir,
   """
   input_collection = (
       pipeline | 'ReadInputTFRecord' >> beam.io.tfrecordio.ReadFromTFRecord(
+<<<<<<< HEAD
           input_tfrecord,
           coder=beam.coders.BytesCoder()))
+=======
+          input_tfrecord, coder=beam.coders.BytesCoder())
+      | 'AddKeys' >> beam.Map(add_keys))
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   output_collection = input_collection | 'ExtractEmbedding' >> beam.ParDo(
       GenerateEmbeddingDataFn(model_dir, top_k_embedding_count,
                               bottom_k_embedding_count))
   output_collection = output_collection | 'Reshuffle' >> beam.Reshuffle()
+<<<<<<< HEAD
   _ = output_collection | 'WritetoDisk' >> beam.io.tfrecordio.WriteToTFRecord(
       output_tfrecord,
       num_shards=num_shards,
       coder=beam.coders.ProtoCoder(tf.train.Example))
+=======
+  _ = output_collection | 'DropKeys' >> beam.Map(
+      drop_keys) | 'WritetoDisk' >> beam.io.tfrecordio.WriteToTFRecord(
+          output_tfrecord,
+          num_shards=num_shards,
+          coder=beam.coders.ProtoCoder(tf.train.Example))
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 def parse_args(argv):
@@ -416,4 +474,7 @@ def main(argv=None, save_main_session=True):
 
 if __name__ == '__main__':
   main()
+<<<<<<< HEAD
 
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

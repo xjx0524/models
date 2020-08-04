@@ -17,5 +17,8 @@ from official.nlp.modeling.networks.albert_transformer_encoder import AlbertTran
 from official.nlp.modeling.networks.classification import Classification
 from official.nlp.modeling.networks.encoder_scaffold import EncoderScaffold
 from official.nlp.modeling.networks.span_labeling import SpanLabeling
+<<<<<<< HEAD
 from official.nlp.modeling.networks.token_classification import TokenClassification
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.nlp.modeling.networks.transformer_encoder import TransformerEncoder

@@ -3,7 +3,11 @@ import os
 from setuptools import find_packages
 from setuptools import setup
 
+<<<<<<< HEAD
 REQUIRED_PACKAGES = ['apache-beam', 'pillow', 'lxml', 'matplotlib', 'Cython',
+=======
+REQUIRED_PACKAGES = ['pillow', 'lxml', 'matplotlib', 'Cython',
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
                      'contextlib2', 'tf-slim', 'six', 'pycocotools', 'scipy',
                      'pandas']
 

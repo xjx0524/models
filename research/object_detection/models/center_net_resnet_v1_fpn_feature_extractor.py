@@ -166,7 +166,13 @@ class CenterNetResnetV1FpnFeatureExtractor(CenterNetFeatureExtractor):
       supported_types = ['classification']
       raise ValueError(
           ('Sub model {} is not defined for ResNet FPN.'.format(sub_model_type)
+<<<<<<< HEAD
            + 'Supported types are {}.'.format(supported_types)))
+=======
+           + 'Supported types are {}.'.format(supported_types))
+          + 'Use the script convert_keras_models.py to create your own '
+          + 'classification checkpoints.')
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 def resnet_v1_101_fpn(channel_means, channel_stds, bgr_ordering):

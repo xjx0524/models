@@ -38,6 +38,12 @@ class OnDeviceEmbedding(tf.keras.layers.Layer):
       lookup. Defaults to False (that is, using tf.gather). Setting this option
       to True may improve performance, especially on small vocabulary sizes, but
       will generally require more memory.
+<<<<<<< HEAD
+=======
+    use_scale: Whether to scale the output embeddings. Defaults to False (that
+      is, not to scale). Setting this option to True will let values in output
+      embeddings multiplied by self._embedding_width ** 0.5.
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   """
 
   def __init__(self,
@@ -45,6 +51,10 @@ class OnDeviceEmbedding(tf.keras.layers.Layer):
                embedding_width,
                initializer="glorot_uniform",
                use_one_hot=False,
+<<<<<<< HEAD
+=======
+               use_scale=False,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
                **kwargs):
 
     super(OnDeviceEmbedding, self).__init__(**kwargs)
@@ -52,6 +62,10 @@ class OnDeviceEmbedding(tf.keras.layers.Layer):
     self._embedding_width = embedding_width
     self._initializer = initializer
     self._use_one_hot = use_one_hot
+<<<<<<< HEAD
+=======
+    self._use_scale = use_scale
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
   def get_config(self):
     config = {
@@ -59,6 +73,10 @@ class OnDeviceEmbedding(tf.keras.layers.Layer):
         "embedding_width": self._embedding_width,
         "initializer": self._initializer,
         "use_one_hot": self._use_one_hot,
+<<<<<<< HEAD
+=======
+        "use_scale": self._use_scale,
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     }
     base_config = super(OnDeviceEmbedding, self).get_config()
     return dict(list(base_config.items()) + list(config.items()))
@@ -85,4 +103,9 @@ class OnDeviceEmbedding(tf.keras.layers.Layer):
         # Work around b/142213824: prefer concat to shape over a Python list.
         tf.concat([tf.shape(inputs), [self._embedding_width]], axis=0))
     embeddings.set_shape(inputs.shape.as_list() + [self._embedding_width])
+<<<<<<< HEAD
+=======
+    if self._use_scale:
+      embeddings *= self._embedding_width ** 0.5
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     return embeddings

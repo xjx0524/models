@@ -26,7 +26,11 @@ import re
 import sys
 import unicodedata
 
+<<<<<<< HEAD
 from absl import app as absl_app
+=======
+from absl import app
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from absl import flags
 import six
 from six.moves import range
@@ -149,4 +153,8 @@ if __name__ == "__main__":
   tf.logging.set_verbosity(tf.logging.INFO)
   define_compute_bleu_flags()
   FLAGS = flags.FLAGS
+<<<<<<< HEAD
   absl_app.run(main)
+=======
+  app.run(main)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

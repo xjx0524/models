@@ -202,9 +202,15 @@ class ResnetShapeTest(test_case.TestCase, parameterized.TestCase):
       })
   def test_output_shapes(self, resnet_type, output_layer_names):
     if resnet_type == 'resnet_v1_34':
+<<<<<<< HEAD
       model = resnet_v1.resnet_v1_34(weights=None)
     else:
       model = resnet_v1.resnet_v1_18(weights=None)
+=======
+      model = resnet_v1.resnet_v1_34(input_shape=(64, 64, 3), weights=None)
+    else:
+      model = resnet_v1.resnet_v1_18(input_shape=(64, 64, 3), weights=None)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     outputs = [
         model.get_layer(output_layer_name).output
         for output_layer_name in output_layer_names

@@ -3,7 +3,11 @@ google-api-python-client>=1.6.7
 google-cloud-bigquery>=0.31.0
 kaggle>=1.3.9
 numpy>=1.15.4
+<<<<<<< HEAD
 oauth2client>=4.1.2
+=======
+oauth2client
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 pandas>=0.22.0
 psutil>=5.4.3
 py-cpuinfo>=3.3.0
@@ -21,7 +25,11 @@ pyyaml
 # CV related dependencies
 opencv-python-headless
 Pillow
+<<<<<<< HEAD
 -e git+https://github.com/cocodataset/cocoapi#egg=pycocotools&subdirectory=PythonAPI
+=======
+pycocotools
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 # NLP related dependencies
 seqeval
 sentencepiece

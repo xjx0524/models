@@ -32,7 +32,12 @@ from official.recommendation import movielens
 def create_dataset_from_tf_record_files(input_file_pattern,
                                         pre_batch_size,
                                         batch_size,
+<<<<<<< HEAD
                                         is_training=True):
+=======
+                                        is_training=True,
+                                        rebatch=False):
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   """Creates dataset from (tf)records files for training/evaluation."""
   if pre_batch_size != batch_size:
     raise ValueError("Pre-batch ({}) size is not equal to batch "
@@ -51,6 +56,15 @@ def create_dataset_from_tf_record_files(input_file_pattern,
   dataset = dataset.map(
       decode_fn, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
+<<<<<<< HEAD
+=======
+  if rebatch:
+    # A workaround for TPU Pod evaluation dataset.
+    # TODO (b/162341937) remove once it's fixed.
+    dataset = dataset.unbatch()
+    dataset = dataset.batch(pre_batch_size)
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
   return dataset
 
@@ -151,12 +165,26 @@ def create_ncf_input_data(params,
         params["train_dataset_path"],
         input_meta_data["train_prebatch_size"],
         params["batch_size"],
+<<<<<<< HEAD
         is_training=True)
+=======
+        is_training=True,
+        rebatch=False)
+
+    # Re-batch evaluation dataset for TPU Pods.
+    # TODO (b/162341937) remove once it's fixed.
+    eval_rebatch = (params["use_tpu"] and strategy.num_replicas_in_sync > 8)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     eval_dataset = create_dataset_from_tf_record_files(
         params["eval_dataset_path"],
         input_meta_data["eval_prebatch_size"],
         params["eval_batch_size"],
+<<<<<<< HEAD
         is_training=False)
+=======
+        is_training=False,
+        rebatch=eval_rebatch)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
     num_train_steps = int(input_meta_data["num_train_steps"])
     num_eval_steps = int(input_meta_data["num_eval_steps"])

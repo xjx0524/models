@@ -7,6 +7,7 @@ This directory contains code implementations and pre-trained models of published
 The research models are maintained by their respective authors.
 
 ## Table of Contents
+<<<<<<< HEAD
 - [Modeling Libraries and Models](#modeling-libraries-and-models)
 - [Models and Implementations](#models-and-implementations)
   * [Computer Vision](#computer-vision)
@@ -15,6 +16,19 @@ The research models are maintained by their respective authors.
   * [Reinforcement Learning](#reinforcement-learning)
   * [Others](#others)
 - [Archived Models and Implementations](#warning-archived-models-and-implementations) (:no_entry_sign: No longer maintained)
+=======
+- [TensorFlow Research Models](#tensorflow-research-models)
+  - [Table of Contents](#table-of-contents)
+  - [Modeling Libraries and Models](#modeling-libraries-and-models)
+  - [Models and Implementations](#models-and-implementations)
+    - [Computer Vision](#computer-vision)
+    - [Natural Language Processing](#natural-language-processing)
+    - [Audio and Speech](#audio-and-speech)
+    - [Reinforcement Learning](#reinforcement-learning)
+    - [Others](#others)
+    - [Old Models and Implementations in TensorFlow 1](#old-models-and-implementations-in-tensorflow-1)
+  - [Contributions](#contributions)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 ## Modeling Libraries and Models
 
@@ -49,6 +63,10 @@ The research models are maintained by their respective authors.
 | Directory | Paper(s) | Conference | Maintainer(s) |
 |-----------|----------|------------|---------------|
 | [audioset](audioset) | [1] [Audio Set: An ontology and human-labeled dataset for audio events](https://research.google/pubs/pub45857/)<br />[2] [CNN Architectures for Large-Scale Audio Classification](https://research.google/pubs/pub45611/) | ICASSP 2017 | plakal, dpwe |
+<<<<<<< HEAD
+=======
+| [deep_speech](deep_speech) | [Deep Speech 2](https://arxiv.org/abs/1512.02595) | ICLR 2016 | yhliang2018 |
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 ### Reinforcement Learning
 
@@ -64,6 +82,7 @@ The research models are maintained by their respective authors.
 | [lfads](lfads) | [LFADS - Latent Factor Analysis via Dynamical Systems](https://arxiv.org/abs/1608.06315) | | jazcollins, sussillo |
 | [rebar](rebar) | [REBAR: Low-variance, unbiased gradient estimates for discrete latent variable models](https://arxiv.org/abs/1703.07370) | NIPS 2017 | gjtucker |
 
+<<<<<<< HEAD
 ---
 
 ## :warning: Archived Models and Implementations
@@ -116,6 +135,11 @@ After removal, you will still be able to access archived models in the archive b
 | [textsum](textsum)| [A Neural Attention Model for Abstractive Sentence Summarization](https://arxiv.org/abs/1509.00685) | EMNLP 2015 | panyx0718, peterjliu |
 | [transformer](transformer) | [Spatial Transformer Network](https://arxiv.org/abs/1506.02025) | NIPS 2015 | daviddao|
 | [video_prediction](video_prediction) | [Unsupervised Learning for Physical Interaction through Video Prediction](https://arxiv.org/abs/1605.07157) | NIPS 2016 | cbfinn |
+=======
+### Old Models and Implementations in TensorFlow 1
+
+:warning: If you are looking for old models, please visit the [Archive branch](https://github.com/tensorflow/models/tree/archive/research).
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 ---
 

@@ -37,11 +37,18 @@ import argparse
 import hashlib
 import io
 import json
+<<<<<<< HEAD
 import logging
 import os
 import numpy as np
 import PIL.Image
 import tensorflow.compat.v1 as tf
+=======
+import os
+import numpy as np
+import PIL.Image
+import tensorflow as tf
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from object_detection.utils import dataset_util
 
 try:
@@ -110,6 +117,7 @@ class ParseImage(beam.DoFn):
         encoded_jpg = fid.read()
       encoded_jpg_io = io.BytesIO(encoded_jpg)
       image = PIL.Image.open(encoded_jpg_io)
+<<<<<<< HEAD
       # Ensure the image can be read by tf
       with tf.Graph().as_default():
         image = tf.image.decode_jpeg(encoded_jpg, channels=3)
@@ -120,6 +128,11 @@ class ParseImage(beam.DoFn):
     except Exception as e:  # pylint: disable=broad-except
       # The image file is missing or corrupt
       tf.logging.error(str(e))
+=======
+      image = tf.io.decode_jpeg(encoded_jpg, channels=3)
+    except Exception:  # pylint: disable=broad-except
+      # The image file is missing or corrupt
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       return []
 
     key = hashlib.sha256(encoded_jpg).hexdigest()
@@ -257,8 +270,11 @@ def create_pipeline(pipeline,
     keep_bboxes: Whether to keep any bounding boxes that exist in the json file
   """
 
+<<<<<<< HEAD
   logging.info('Reading data from COCO-CameraTraps Dataset.')
 
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   data = load_json_data(input_annotations_file)
 
   num_shards = int(np.ceil(float(len(data['images']))/num_images_per_shard))

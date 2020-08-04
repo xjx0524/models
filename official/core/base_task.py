@@ -18,11 +18,18 @@ import abc
 import functools
 from typing import Any, Callable, Optional
 
+<<<<<<< HEAD
+=======
+from absl import logging
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 import six
 import tensorflow as tf
 
 from official.modeling.hyperparams import config_definitions as cfg
+<<<<<<< HEAD
 from official.utils import registry
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -67,7 +74,23 @@ class Task(tf.Module):
     Args:
       model: The keras.Model built or used by this task.
     """
+<<<<<<< HEAD
     pass
+=======
+    ckpt_dir_or_file = self.task_config.init_checkpoint
+    logging.info("Trying to load pretrained checkpoint from %s",
+                 ckpt_dir_or_file)
+    if tf.io.gfile.isdir(ckpt_dir_or_file):
+      ckpt_dir_or_file = tf.train.latest_checkpoint(ckpt_dir_or_file)
+    if not ckpt_dir_or_file:
+      return
+
+    ckpt = tf.train.Checkpoint(**model.checkpoint_items)
+    status = ckpt.read(ckpt_dir_or_file)
+    status.expect_partial().assert_existing_objects_matched()
+    logging.info("Finished loading pretrained checkpoint from %s",
+                 ckpt_dir_or_file)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
   @abc.abstractmethod
   def build_model(self) -> tf.keras.Model:
@@ -282,6 +305,7 @@ class Task(tf.Module):
     """Optional reduce of aggregated logs over validation steps."""
     return {}
 
+<<<<<<< HEAD
 
 _REGISTERED_TASK_CLS = {}
 
@@ -328,3 +352,5 @@ def register_task_cls(task_config_cls):
 def get_task_cls(task_config_cls):
   task_cls = registry.lookup(_REGISTERED_TASK_CLS, task_config_cls)
   return task_cls
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

@@ -6,9 +6,29 @@ from setuptools import setup
 # Note: adding apache-beam to required packages causes conflict with
 # tf-models-offical requirements. These packages request for incompatible
 # oauth2client package.
+<<<<<<< HEAD
 REQUIRED_PACKAGES = ['pillow', 'lxml', 'matplotlib', 'Cython', 'contextlib2',
                      'tf-slim', 'six', 'pycocotools', 'scipy', 'pandas',
                      'tf-models-official']
+=======
+REQUIRED_PACKAGES = [
+    # Required for apache-beam with PY3
+    'avro-python3==1.8.1',
+    'apache-beam',
+    'pillow',
+    'lxml',
+    'matplotlib',
+    'Cython',
+    'contextlib2',
+    'tf-slim',
+    'six',
+    'pycocotools',
+    'scipy',
+    'pandas',
+    # Required to avoid Numpy 1.19.1 conflict with TF 2.3
+    'tf-models-official==2.2.2'
+]
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 setup(
     name='object_detection',

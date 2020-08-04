@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+<<<<<<< HEAD
 """Trainer network for BERT-style models."""
 # pylint: disable=g-classes-have-attributes
 from __future__ import absolute_import
 from __future__ import division
 # from __future__ import google_type_annotations
 from __future__ import print_function
+=======
+"""BERT Question Answering model."""
+# pylint: disable=g-classes-have-attributes
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 import tensorflow as tf
 

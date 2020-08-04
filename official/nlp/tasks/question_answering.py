@@ -17,12 +17,23 @@
 import collections
 import json
 import os
+<<<<<<< HEAD
 from absl import logging
 import dataclasses
+=======
+
+from absl import logging
+import dataclasses
+import orbit
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 import tensorflow as tf
 import tensorflow_hub as hub
 
 from official.core import base_task
+<<<<<<< HEAD
+=======
+from official.core import task_factory
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.modeling.hyperparams import base_config
 from official.modeling.hyperparams import config_definitions as cfg
 from official.nlp.bert import squad_evaluate_v1_1
@@ -57,7 +68,11 @@ class QuestionAnsweringConfig(cfg.TaskConfig):
   validation_data: cfg.DataConfig = cfg.DataConfig()
 
 
+<<<<<<< HEAD
 @base_task.register_task_cls(QuestionAnsweringConfig)
+=======
+@task_factory.register_task_cls(QuestionAnsweringConfig)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class QuestionAnsweringTask(base_task.Task):
   """Task object for question answering."""
 
@@ -83,6 +98,13 @@ class QuestionAnsweringTask(base_task.Task):
       self._tf_record_input_path, self._eval_examples, self._eval_features = (
           self._preprocess_eval_data(params.validation_data))
 
+<<<<<<< HEAD
+=======
+  def set_preprocessed_eval_input_path(self, eval_input_path):
+    """Sets the path to the preprocessed eval data."""
+    self._tf_record_input_path = eval_input_path
+
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
   def build_model(self):
     if self._hub_module:
       encoder_network = utils.get_encoder_from_hub(self._hub_module)
@@ -241,10 +263,13 @@ class QuestionAnsweringTask(base_task.Task):
         step_outputs['end_logits']):
       u_ids, s_logits, e_logits = (
           unique_ids.numpy(), start_logits.numpy(), end_logits.numpy())
+<<<<<<< HEAD
       if u_ids.size == 1:
         u_ids = [u_ids]
         s_logits = [s_logits]
         e_logits = [e_logits]
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
       for values in zip(u_ids, s_logits, e_logits):
         state.append(self.raw_aggregated_result(
             unique_id=values[0],
@@ -291,6 +316,7 @@ class QuestionAnsweringTask(base_task.Task):
                       'final_f1': eval_metrics['final_f1']}
     return eval_metrics
 
+<<<<<<< HEAD
   def initialize(self, model):
     """Load a pretrained checkpoint (if exists) and then train from iter 0."""
     ckpt_dir_or_file = self.task_config.init_checkpoint
@@ -304,3 +330,47 @@ class QuestionAnsweringTask(base_task.Task):
     status.expect_partial().assert_existing_objects_matched()
     logging.info('Finished loading pretrained checkpoint from %s',
                  ckpt_dir_or_file)
+=======
+
+def predict(task: QuestionAnsweringTask, params: cfg.DataConfig,
+            model: tf.keras.Model):
+  """Predicts on the input data.
+
+  Args:
+    task: A `QuestionAnsweringTask` object.
+    params: A `cfg.DataConfig` object.
+    model: A keras.Model.
+
+  Returns:
+    A tuple of `all_predictions`, `all_nbest` and `scores_diff`, which
+      are dict and can be written to json files including prediction json file,
+      nbest json file and null_odds json file.
+  """
+  tf_record_input_path, eval_examples, eval_features = (
+      task._preprocess_eval_data(params))  # pylint: disable=protected-access
+
+  # `tf_record_input_path` will overwrite `params.input_path`,
+  # when `task.buid_inputs()` is called.
+  task.set_preprocessed_eval_input_path(tf_record_input_path)
+
+  def predict_step(inputs):
+    """Replicated prediction calculation."""
+    return task.validation_step(inputs, model)
+
+  dataset = orbit.utils.make_distributed_dataset(tf.distribute.get_strategy(),
+                                                 task.build_inputs, params)
+  aggregated_outputs = utils.predict(predict_step, task.aggregate_logs, dataset)
+
+  all_predictions, all_nbest, scores_diff = (
+      task.squad_lib.postprocess_output(
+          eval_examples,
+          eval_features,
+          aggregated_outputs,
+          task.task_config.n_best_size,
+          task.task_config.max_answer_length,
+          task.task_config.validation_data.do_lower_case,
+          version_2_with_negative=(params.version_2_with_negative),
+          null_score_diff_threshold=task.task_config.null_score_diff_threshold,
+          verbose=False))
+  return all_predictions, all_nbest, scores_diff
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

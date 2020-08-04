@@ -14,7 +14,10 @@
 # limitations under the License.
 # ==============================================================================
 """Tagging (e.g., NER/POS) task."""
+<<<<<<< HEAD
 import logging
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from typing import List, Optional, Tuple
 
 import dataclasses
@@ -26,6 +29,10 @@ import tensorflow as tf
 import tensorflow_hub as hub
 
 from official.core import base_task
+<<<<<<< HEAD
+=======
+from official.core import task_factory
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 from official.modeling.hyperparams import base_config
 from official.modeling.hyperparams import config_definitions as cfg
 from official.nlp.configs import encoders
@@ -81,7 +88,11 @@ def _masked_labels_and_weights(y_true):
   return masked_y_true, tf.cast(mask, tf.float32)
 
 
+<<<<<<< HEAD
 @base_task.register_task_cls(TaggingConfig)
+=======
+@task_factory.register_task_cls(TaggingConfig)
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class TaggingTask(base_task.Task):
   """Task object for tagging (e.g., NER or POS)."""
 
@@ -215,6 +226,7 @@ class TaggingTask(base_task.Task):
             seqeval_metrics.accuracy_score(label_class, predict_class),
     }
 
+<<<<<<< HEAD
   def initialize(self, model):
     """Load a pretrained checkpoint (if exists) and then train from iter 0."""
     ckpt_dir_or_file = self.task_config.init_checkpoint
@@ -229,6 +241,8 @@ class TaggingTask(base_task.Task):
     logging.info('Finished loading pretrained checkpoint from %s',
                  ckpt_dir_or_file)
 
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 
 def predict(task: TaggingTask, params: cfg.DataConfig,
             model: tf.keras.Model) -> Tuple[List[List[int]], List[int]]:
@@ -246,6 +260,7 @@ def predict(task: TaggingTask, params: cfg.DataConfig,
       sentence id of the corresponding example.
   """
 
+<<<<<<< HEAD
   @tf.function
   def predict_step(iterator):
     """Predicts on distributed devices."""
@@ -270,6 +285,27 @@ def predict(task: TaggingTask, params: cfg.DataConfig,
   def reduce_fn(state, outputs):
     """Concatenates model's outputs."""
     cur_predict_ids, cur_sentence_ids = state
+=======
+  def predict_step(inputs):
+    """Replicated prediction calculation."""
+    x, y = inputs
+    sentence_ids = x.pop('sentence_id')
+    outputs = task.inference_step(x, model)
+    predict_ids = outputs['predict_ids']
+    label_mask = tf.greater_equal(y, 0)
+    return dict(
+        predict_ids=predict_ids,
+        label_mask=label_mask,
+        sentence_ids=sentence_ids)
+
+  def aggregate_fn(state, outputs):
+    """Concatenates model's outputs."""
+    if state is None:
+      state = {'predict_ids': [], 'sentence_ids': []}
+
+    cur_predict_ids = state['predict_ids']
+    cur_sentence_ids = state['sentence_ids']
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
     for batch_predict_ids, batch_label_mask, batch_sentence_ids in zip(
         outputs['predict_ids'], outputs['label_mask'],
         outputs['sentence_ids']):
@@ -283,6 +319,7 @@ def predict(task: TaggingTask, params: cfg.DataConfig,
           # Skip the padding label.
           if tmp_label_mask[i]:
             cur_predict_ids[-1].append(tmp_predict_ids[i])
+<<<<<<< HEAD
     return cur_predict_ids, cur_sentence_ids
 
   loop_fn = orbit.utils.create_loop_fn(predict_step)
@@ -292,3 +329,11 @@ def predict(task: TaggingTask, params: cfg.DataConfig,
   predict_ids, sentence_ids = loop_fn(
       iter(dataset), num_steps=-1, state=([], []), reduce_fn=reduce_fn)
   return predict_ids, sentence_ids
+=======
+    return state
+
+  dataset = orbit.utils.make_distributed_dataset(tf.distribute.get_strategy(),
+                                                 task.build_inputs, params)
+  outputs = utils.predict(predict_step, aggregate_fn, dataset)
+  return outputs['predict_ids'], outputs['sentence_ids']
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36

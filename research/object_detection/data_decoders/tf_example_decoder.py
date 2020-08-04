@@ -124,6 +124,7 @@ class _ClassTensorHandler(slim_example_decoder.Tensor):
                       self._display_name_to_id_table.lookup(unmapped_tensor))
 
 
+<<<<<<< HEAD
 class _BackupHandler(slim_example_decoder.ItemHandler):
   """An ItemHandler that tries two ItemHandlers in order."""
 
@@ -158,6 +159,8 @@ class _BackupHandler(slim_example_decoder.ItemHandler):
         false_fn=lambda: item)
 
 
+=======
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
 class TfExampleDecoder(data_decoder.DataDecoder):
   """Tensorflow Example proto decoder."""
 
@@ -405,12 +408,20 @@ class TfExampleDecoder(data_decoder.DataDecoder):
     if label_map_proto_file:
       # If the label_map_proto is provided, try to use it in conjunction with
       # the class text, and fall back to a materialized ID.
+<<<<<<< HEAD
       label_handler = _BackupHandler(
+=======
+      label_handler = slim_example_decoder.BackupHandler(
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
           _ClassTensorHandler(
               'image/object/class/text', label_map_proto_file,
               default_value=''),
           slim_example_decoder.Tensor('image/object/class/label'))
+<<<<<<< HEAD
       image_label_handler = _BackupHandler(
+=======
+      image_label_handler = slim_example_decoder.BackupHandler(
+>>>>>>> a811a3b7e640722318ad868c99feddf3f3063e36
           _ClassTensorHandler(
               fields.TfExampleFields.image_class_text,
               label_map_proto_file,
