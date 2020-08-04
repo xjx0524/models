@@ -211,6 +211,8 @@ def ExtractGlobalFeatures(image,
   image_tensor = gld.NormalizeImages(
       image, pixel_value_offset=128.0, pixel_value_scale=128.0)
   image_tensor = tf.expand_dims(image_tensor, 0, name='image/expand_dims')
+  image_tensor_flip = tf.image.flip_left_right(image_tensor)
+  image_tensor = tf.concat([image_tensor, image_tensor_flip], 0, name='image/image_tensor_concat')
 
   def _ResizeAndExtract(scale_index):
     """Helper function to resize image then extract global feature.
@@ -226,6 +228,7 @@ def ExtractGlobalFeatures(image,
         tf.round(original_image_shape_float * scale), tf.int32)
     resized_image = tf.image.resize(image_tensor, new_image_size)
     global_descriptor = model_fn(resized_image)
+    global_descriptor = tf.reduce_mean(global_descriptor, axis=0, keepdims=True)
     return global_descriptor
 
   # First loop to find initial scale to be used.
